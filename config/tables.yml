@@ -1,0 +1,22 @@
+# Replicated tables. Columns not listed here are intentionally NOT copied
+# (e.g. PII we don't want in the analytics warehouse).
+tables:
+  - source: public.orders
+    target: orders_current
+    primary_key: [order_id]
+    columns:
+      - { name: order_id,    type: BIGINT }
+      - { name: customer_id, type: BIGINT }
+      - { name: status,      type: TEXT }
+      - { name: amount,      type: NUMERIC(12, 2) }
+      - { name: currency,    type: TEXT }
+      - { name: created_at,  type: BIGINT }   # epoch ms (time.precision.mode=connect)
+      - { name: updated_at,  type: BIGINT }
+  - source: public.customers
+    target: customers_current
+    primary_key: [customer_id]
+    columns:
+      - { name: customer_id, type: BIGINT }
+      - { name: country,     type: TEXT }
+      - { name: tier,        type: TEXT }
+      - { name: updated_at,  type: BIGINT }

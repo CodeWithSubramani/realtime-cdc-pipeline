@@ -1,0 +1,31 @@
+{
+  "name": "shop-postgres-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "pgoutput",
+    "database.hostname": "source-db",
+    "database.port": "5432",
+    "database.user": "debezium",
+    "database.password": "${file:/kafka/secrets/source.properties:password}",
+    "database.dbname": "shop",
+    "topic.prefix": "shop",
+    "table.include.list": "public.orders,public.customers",
+    "publication.name": "dbz_shop",
+    "publication.autocreate.mode": "filtered",
+    "slot.name": "dbz_shop",
+    "snapshot.mode": "initial",
+    "heartbeat.interval.ms": "10000",
+    "heartbeat.action.query": "INSERT INTO debezium_heartbeat (id, ts) VALUES (1, now()) ON CONFLICT (id) DO UPDATE SET ts = EXCLUDED.ts",
+    "decimal.handling.mode": "string",
+    "time.precision.mode": "connect",
+    "tombstones.on.delete": "true",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "topic.creation.default.replication.factor": "1",
+    "topic.creation.default.partitions": "6",
+    "topic.creation.default.cleanup.policy": "compact",
+    "errors.tolerance": "none"
+  }
+}
